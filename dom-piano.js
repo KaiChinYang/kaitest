@@ -86,17 +86,17 @@ class DomPiano {
   getNoteColor = (note) => {
     switch (note) {
       case 'C':   return 'rgb(255,0,0)';         break;
-      case 'Db':  return 'rgb(204,102,102)';     break;
-      case 'D':   return 'rgb(255,153,0)';       break;
-      case 'Eb':  return 'rgb(248,204,153)';     break;
-      case 'E':   return 'rgb(255,255,0)';       break;
-      case 'F':   return 'rgb(0,255,0)';         break;
-      case 'Gb':  return 'rgb(102,204,102)';     break;
-      case 'G':   return 'rgb(0,0,255)';         break;
-      case 'Ab':  return 'rgb(102,102,204)';     break;
-      case 'A':   return 'rgb(102,51,204)';      break;
-      case 'Bb':  return 'rgb(153,85,208)';      break;
-      case 'B':   return 'rgb(255,102,255)';     break;
+      case 'Db':  return 'rgb(255,0,0)';     break;
+      case 'D':   return 'rgb(255,0,0)';       break;
+      case 'Eb':  return 'rgb(255,0,0)';     break;
+      case 'E':   return 'rgb(255,0,0)';       break;
+      case 'F':   return 'rgb(255,0,0)';         break;
+      case 'Gb':  return 'rgb(255,0,0)';     break;
+      case 'G':   return 'rgb(255,0,0)';         break;
+      case 'Ab':  return 'rgb(255,0,0)';     break;
+      case 'A':   return 'rgb(255,0,0)';      break;
+      case 'Bb':  return 'rgb(255,0,0)';      break;
+      case 'B':   return 'rgb(255,0,0)';     break;
     }
   }
 
