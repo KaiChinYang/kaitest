@@ -7,8 +7,8 @@ var beatsValue        = 4;
 var numStaves         = 2;
 var canvas            = document.getElementById("canvasScore")
 var renderer          = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
-var ctxRenderer       = renderer.getContext();
-var arrayVoices       = [numStaves / 2];
+var ctxRenderer       = renderer.getContext();  //Context
+var arrayVoices       = [numStaves / 2];     //
 var arrayBraces       = [numStaves / 2];
 var leftDecoration    = [numStaves / 2];
 var rightDecoration   = [numStaves / 2];
@@ -19,6 +19,7 @@ var arrayStaves       = [numStaves];
 var VFS               = Vex.Flow.StaveNote;
 var bNoteDown         = false;
 var arrayNotesPlayed  = [];
+var deletnum = 0;
 
 showNotes();
 
@@ -88,7 +89,7 @@ function addNote(strNote) {
       arrayNoteArrays[0].push(vfsRest);     arrayNoteArrays[1].push(vfsChord);
     }
     arrayAccArrays[0].push(true); arrayAccArrays[1].push(true);
-  } else {
+  } else {  // else. 
     // First note (possibly of a chord)
     bNoteDown =                             true;
     var convertedNote =                     convertNote(strNote, isUpper(strNote));
@@ -99,7 +100,7 @@ function addNote(strNote) {
     }
     if (isUpper(strNote)) {
       var vfsNote = new VFS({ keys: chordNotes, duration: "q" });
-      var vfsRest = new VFS({ clef: "bass", keys: ["f/3"], duration: "qr" });
+      var vfsRest = new VFS({ clef: "bass", keys: ["f/3"], duration: "qr" });    //休止符
       arrayNoteArrays[0].push(vfsNote);     arrayNoteArrays[1].push(vfsRest);
     } else {
       var vfsNote = new VFS({ clef: "bass", keys: chordNotes, duration: "q" });
@@ -111,10 +112,11 @@ function addNote(strNote) {
   if (noteLength(arrayNoteArrays, 0) % 4 == 0) {
     arrayNoteArrays[0].push(new Vex.Flow.BarNote());  arrayNoteArrays[1].push(new Vex.Flow.BarNote());
     arrayAccArrays[0].push(true);                     arrayAccArrays[1].push(true);
+    deletnum = deletnum + 1;
   }
 }
 
-function removeNote(strNote) {
+function removeNote(strNote) {  //刪除note ？
   var convertedNote =                       convertNote(strNote, isUpper(strNote));
   tempArray =                               arrayNotesPlayed.filter(function(note) { return note.converted != convertedNote; });
   arrayNotesPlayed =                        tempArray;
@@ -133,12 +135,12 @@ function noteLength(arr, index) {
 function isUpper(strNote) {
   var octave =        parseInt(strNote.slice(-1));
   var noteOrdinal =   strNote.charAt(0) - 'A';
-  if (octave < 4)  // A lower number means that more notes appear in the treble clef
+  if (octave < 4)  // A lower number means that more notes appear in the treble clef(高音譜號)
     return false;
   return true;
 }
 
-function convertNote(strNote, isUpper) {
+function convertNote(strNote, isUpper) {        //將midi 值轉換成vexflow看得懂的格式
   if (isUpper) {
     switch (strNote) {
       case 'C4':   return 'c/4';      case 'Db4':  return 'c#/4';     case 'D4':   return 'd/4';      case 'Eb4':  return 'eb/4';
@@ -187,9 +189,9 @@ function showNotes() {
   // Each of these are pairs of staves (treble/bass). Even-numbered stave lookups then will be
   // treble; odd are bass clef staves.
   arrayStaves[0]        = new Vex.Flow.Stave(canvasLeftMargin, canvasTopMargin, canvasWidth);
-  arrayStaves[0].addClef("treble").addTimeSignature("4/4").setContext(ctxRenderer).draw();
+  arrayStaves[0].addClef("treble").addTimeSignature("4/4").setContext(ctxRenderer).draw();          //畫44拍的高音譜
   arrayStaves[1]        = new Vex.Flow.Stave(canvasLeftMargin, canvasTopMargin + staveHeight, canvasWidth);
-  arrayStaves[1].addClef("bass").addTimeSignature("4/4").setContext(ctxRenderer).draw();
+  arrayStaves[1].addClef("bass").addTimeSignature("4/4").setContext(ctxRenderer).draw();          //畫44拍的低音譜
 
   for (var z=0; z<numStaves; z+=2) {
     arrayBraces[z]        = new Vex.Flow.StaveConnector(arrayStaves[z], arrayStaves[z+1]).setType(3);
@@ -198,14 +200,14 @@ function showNotes() {
     arrayBraces[z].setContext(ctxRenderer).draw();
     leftDecoration[z].setContext(ctxRenderer).draw();
     rightDecoration[z].setContext(ctxRenderer).draw();
-  };
+  };   // 畫譜的線 {|
 
   // ------------------------------------------------------------------------------------------
   // The variable staveIterator is used to walk through the outermost array of the
   // arrays of notes.  arrayNoteArrays[staveIterator] (for staveIterator=0) then
   // points to the notes of the first note array.
   // ------------------------------------------------------------------------------------------
-  for (staveIterator=0; staveIterator<arrayNoteArrays.length; staveIterator++) {
+  for (staveIterator=0; staveIterator<arrayNoteArrays.length; staveIterator++) {    //樂譜游標？
     // ----------------------------------------------------------------------------------------
     // The variable i is used to walk through a particular notes array like
     // arrayNoteArrays[0][], for example.  notesArray[staveIterator][i]
@@ -234,7 +236,7 @@ function showNotes() {
         // for a particular arrayNoteArrays[staveIterator][i][] array element.
         // ------------------------------------------------------------------------------------
         for (j=0; j < arrayNoteArrays[staveIterator][i].keys.length; j++) {
-          // Here's where all the colorization happens, to include the application
+          // Here's where all the colorisation happens, to include the application
           // of accidentals
           switch (arrayNoteArrays[staveIterator][i].keys[j]) {
             // --------------------------------------------------------------------------------
@@ -242,8 +244,8 @@ function showNotes() {
             // --------------------------------------------------------------------------------
             case "c/8":   case "c/7":   case "c/6":   case "c/5":   case "c/4":   case "c/3":   case "c/2":   case "c/1":
               if (arrayNoteArrays[staveIterator][i].keys.length == 1)
-                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#ff0000"});
-              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#ff0000"});
+                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#050305"});
+              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#050305"});
               if (arrayNoteArrays[staveIterator][i].isDotted())
                 arrayNoteArrays[staveIterator][i].addDotToAll();
               break;
@@ -252,8 +254,8 @@ function showNotes() {
             // --------------------------------------------------------------------------------
             case "c#/7":  case "c#/6":  case "c#/5":  case "c#/4":  case "c#/3":  case "c#/2":  case "c#/1":
               if (arrayNoteArrays[staveIterator][i].keys.length == 1)
-                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#cc6666"});
-              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#cc6666"});
+                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#050305"});
+              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#050305"});
               if (arrayAccArrays[staveIterator][i]) {
                 arrayNoteArrays[staveIterator][i].addAccidental(j, new Vex.Flow.Accidental("#"));
                 arrayAccArrays[staveIterator][i] = false;  
@@ -266,8 +268,8 @@ function showNotes() {
             // --------------------------------------------------------------------------------
             case "d/7":   case "d/6":   case "d/5":   case "d/4":   case "d/3":   case "d/2":   case "d/1":
               if (arrayNoteArrays[staveIterator][i].keys.length == 1)
-                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#ff9900"});
-              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#ff9900"});
+                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#050305"});
+              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#050305"});
               if (arrayNoteArrays[staveIterator][i].isDotted())
                 arrayNoteArrays[staveIterator][i].addDotToAll();
               break;
@@ -276,8 +278,8 @@ function showNotes() {
             // --------------------------------------------------------------------------------
             case "eb/7":  case "eb/6":  case "eb/5":  case "eb/4":  case "eb/3":  case "eb/2":  case "eb/1":
               if (arrayNoteArrays[staveIterator][i].keys.length == 1)
-                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#f8cc99"});
-              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#f8cc99"});
+                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#050305"});
+              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#050305"});
               if (arrayAccArrays[staveIterator][i]) {
                 arrayNoteArrays[staveIterator][i].addAccidental(j, new Vex.Flow.Accidental("b"));
                 arrayAccArrays[staveIterator][i] = false;  
@@ -290,8 +292,8 @@ function showNotes() {
             // --------------------------------------------------------------------------------
             case "e/7":   case "e/6":   case "e/5":   case "e/4":   case "e/3":   case "e/2":   case "e/1":
               if (arrayNoteArrays[staveIterator][i].keys.length == 1)
-                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#ffff00"});
-              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#ffff00"});
+                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#050305"});
+              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#050305"});
               if (arrayNoteArrays[staveIterator][i].isDotted())
                 arrayNoteArrays[staveIterator][i].addDotToAll();
               break;
@@ -304,8 +306,8 @@ function showNotes() {
               if (arrayNoteArrays[staveIterator][i].isRest())
                 break;  // Since rests sit on the F space in the bass clef
               if (arrayNoteArrays[staveIterator][i].keys.length == 1)
-                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#00ff00"});
-              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#00ff00"});
+                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#050305"});
+              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#050305"});
               if (arrayNoteArrays[staveIterator][i].isDotted())
                 arrayNoteArrays[staveIterator][i].addDotToAll();
               break;
@@ -314,8 +316,8 @@ function showNotes() {
             // --------------------------------------------------------------------------------
             case "f#/7":  case "f#/6":  case "f#/5":  case "f#/4":  case "f#/3":  case "f#/2":  case "f#/1":
               if (arrayNoteArrays[staveIterator][i].keys.length == 1)
-                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#66cc66"});
-              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#66cc66"});
+                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#050305"});
+              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#050305"});
               if (arrayAccArrays[staveIterator][i]) {
                 arrayNoteArrays[staveIterator][i].addAccidental(j, new Vex.Flow.Accidental("#"));
                 arrayAccArrays[staveIterator][i] = false;  
@@ -328,8 +330,8 @@ function showNotes() {
             // --------------------------------------------------------------------------------
             case "g/7":   case "g/6":   case "g/5":   case "g/4":   case "g/3":   case "g/2":   case "g/1":
               if (arrayNoteArrays[staveIterator][i].keys.length == 1)
-                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#0000ff"});
-              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#0000ff"});
+                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#050305"});
+              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#050305"});
               if (arrayNoteArrays[staveIterator][i].isDotted())
                 arrayNoteArrays[staveIterator][i].addDotToAll();
               break;
@@ -338,8 +340,8 @@ function showNotes() {
             // --------------------------------------------------------------------------------
             case "g#/7":  case "g#/6":  case "g#/5":  case "g#/4":  case "g#/3":  case "g#/2":  case "g#/1":
               if (arrayNoteArrays[staveIterator][i].keys.length == 1)
-                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#6666cc"});
-              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#6666cc"});
+                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#050305"});
+              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#050305"});
               if (arrayAccArrays[staveIterator][i]) {
                 arrayNoteArrays[staveIterator][i].addAccidental(j, new Vex.Flow.Accidental("#"));
                 arrayAccArrays[staveIterator][i] = false;  
@@ -352,8 +354,8 @@ function showNotes() {
             // --------------------------------------------------------------------------------
             case "a/7":   case "a/6":   case "a/5":   case "a/4":   case "a/3":   case "a/2":   case "a/1":   case "a/0":
               if (arrayNoteArrays[staveIterator][i].keys.length == 1)
-                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#6633cc"});
-              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#6633cc"});
+                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#050305"});
+              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#050305"});
               if (arrayNoteArrays[staveIterator][i].isDotted())
                 arrayNoteArrays[staveIterator][i].addDotToAll();
               break;
@@ -362,8 +364,8 @@ function showNotes() {
             // --------------------------------------------------------------------------------
             case "bb/7":  case "bb/6":  case "bb/5":  case "bb/4":  case "bb/3":  case "bb/2":  case "bb/1":  case "bb/0":
               if (arrayNoteArrays[staveIterator][i].keys.length == 1)
-                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#9955d0"});
-              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#9955d0"});
+                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#050305"});
+              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#050305"});
               if (arrayAccArrays[staveIterator][i]) {
                 arrayNoteArrays[staveIterator][i].addAccidental(j, new Vex.Flow.Accidental("b"));
                 arrayAccArrays[staveIterator][i] = false;  
@@ -378,8 +380,8 @@ function showNotes() {
               if (arrayNoteArrays[staveIterator][i].isRest())
                 break;  // Since half-note rests sit on the B line
               if (arrayNoteArrays[staveIterator][i].keys.length == 1)
-                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#ff66ff"});
-              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#ff66ff"});
+                arrayNoteArrays[staveIterator][i].setStyle({strokeStyle: "#050305"});
+              arrayNoteArrays[staveIterator][i].setKeyStyle(j, {fillStyle: "#050305"});
               if (arrayNoteArrays[staveIterator][i].isDotted())
                 arrayNoteArrays[staveIterator][i].addDotToAll();
               break;
@@ -392,6 +394,9 @@ function showNotes() {
     }
   }
 
+const visibleNoteGroups = [];
+
+
   arrayVoices[0] = [
     new Vex.Flow.Voice({num_beats: arrayBeats[0], beat_value: 16}).addTickables(arrayNoteArrays[0]),
     new Vex.Flow.Voice({num_beats: arrayBeats[1], beat_value: 16}).addTickables(arrayNoteArrays[1])
@@ -401,7 +406,30 @@ function showNotes() {
     // below with the number 80.
     var formatter = new Vex.Flow.Formatter().joinVoices(arrayVoices[0]).format(arrayVoices[0], canvasWidth - keySigWidth);
     // Draw the first two voices on the first set of staves
-    arrayVoices[0][0].draw(ctxRenderer, arrayStaves[0]);
-    arrayVoices[0][1].draw(ctxRenderer, arrayStaves[1]);
+    arrayVoices[0][0].draw(ctxRenderer, arrayStaves[0]);  //高音
+    arrayVoices[0][1].draw(ctxRenderer, arrayStaves[1]);   //低音
+    
+    //arrayNoteArrays.shift();
+    
   }
+  
+ // alert(arrayNoteArrays[0].length);
+  if(deletnum>=4){
+    arrayNoteArrays[0].shift();
+    arrayNoteArrays[1].shift();
+    arrayNoteArrays[0].shift();
+    arrayNoteArrays[1].shift();
+    arrayNoteArrays[0].shift();
+    arrayNoteArrays[1].shift();
+    arrayNoteArrays[0].shift();
+    arrayNoteArrays[1].shift();
+    arrayNoteArrays[0].shift();
+    arrayNoteArrays[1].shift();
+    deletnum = deletnum -1 ;
+  //  alert(arrayNoteArrays[0].length);
+  
+
+  
+  }
+ 
 }
