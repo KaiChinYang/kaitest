@@ -425,6 +425,18 @@ const visibleNoteGroups = [];
     arrayNoteArrays[1].shift();
     arrayNoteArrays[0].shift();
     arrayNoteArrays[1].shift();
+    ///////
+    arrayAccArrays[0].shift();
+    arrayAccArrays[1].shift();
+    arrayAccArrays[0].shift();
+    arrayAccArrays[1].shift();
+    arrayAccArrays[0].shift();
+    arrayAccArrays[1].shift();
+    arrayAccArrays[0].shift();
+    arrayAccArrays[1].shift();
+    arrayAccArrays[0].shift();
+    arrayAccArrays[1].shift();
+
     deletnum = deletnum -1 ;
   //  alert(arrayNoteArrays[0].length);
   
