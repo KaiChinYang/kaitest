@@ -412,9 +412,9 @@ const visibleNoteGroups = [];
     //arrayNoteArrays.shift();
     
   }
-  
- // alert(arrayNoteArrays[0].length);
-  if(deletnum>=4){
+ // alert(noteLength(arrayNoteArrays, 0));
+  //alert(arrayNoteArrays[0].length);
+  if(noteLength(arrayNoteArrays, 0)%16 == 0){
     arrayNoteArrays[0].shift();
     arrayNoteArrays[1].shift();
     arrayNoteArrays[0].shift();
