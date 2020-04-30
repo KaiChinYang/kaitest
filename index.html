@@ -3,20 +3,28 @@
   <head>
     <meta charset="utf-8">
     <title>My Partimento teaching room </title>  
+    <style type ="text/css">
+    .lesson1{
+        positon:fixed; top:50%; left: 50%; transform:translate(-100px,0px); width:1000px; height: 100px;
+        padding:10px; border:1px solid #888888; 
+        background-color: #eeeeee; box-shadow: 0px 0px 10px #000000;
+        display: none;
+    } 
+    </style>
     <link rel="stylesheet" href="./style.css"/>
   </head>
   <body>
     <div id="note-tracker"></div><div id="score-tracker"></div>
-    <button type="button">Lesson 1: What is interval?</button>
-    <button type="button">Lesson 2: The Rule of the Octave</button>
-    <button type="button">Lesson 3: Implementation</button>
-    <button type="button"></button>
+        <button type="button">Lesson 1: What is interval?</button> <div class = "lesson1"> 在這裡加入教學內容</div>
+        <button type="button">Lesson 2: The Rule of the Octave</button>
+        <button type="button">Lesson 3: Implementation</button>
+        <button type="button"></button>
     <div id="tablature">
       <canvas width="1360" height="400" id="canvasScore"></canvas>  
     </div>
     
     <div class="piano">
-      <div id="key-scores">
+      <div id="key-scores"> 
       </div>
       <div id="piano-keys">
       </div>
@@ -28,7 +36,8 @@
     <script src="./main.js"></script>
     <script src="./vexflow-debug.js"></script>
     <script src="./tablature.js"></script>
+    <script src="./node_modules/webmidi/webmidi.min.js"></script>
+    <script src="./webmidifunction.js"></script>
+
   </body>
-  
-  
 </html>
