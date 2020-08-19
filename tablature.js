@@ -21,7 +21,6 @@ var VFS               = Vex.Flow.StaveNote;
 var bNoteDown         = false;
 var arrayNotesPlayed  = [];
 var deletnum = 0;
-
 showNotes();
 
 // --------------------------------------------------------------------------------------------
@@ -438,11 +437,11 @@ const visibleNoteGroups = [];
     arrayAccArrays[0].shift();
     arrayAccArrays[1].shift();
 
+    //alert(steNote);
     deletnum = deletnum -1 ;
   //  alert(arrayNoteArrays[0].length);
   
-
-  
+ 
   }
  
 }
